@@ -1,5 +1,5 @@
 name: youtube_app
-description: YouTube WebView App
+description: SayuraTube App
 
 publish_to: 'none'
 version: 1.0.0+1
@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   webview_flutter: ^4.4.0
+  local_auth: ^2.1.8
 
 flutter:
   uses-material-design: true
