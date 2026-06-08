@@ -76,7 +76,6 @@ class _LockScreenState extends State<LockScreen> {
       _fingerprintEnabled = prefs.getBool('fingerprint_enabled') ?? false;
       _loaded = true;
     });
-
     if (_fingerprintEnabled) {
       _tryBiometric();
     } else if (!_pinEnabled) {
@@ -151,7 +150,6 @@ class _LockScreenState extends State<LockScreen> {
                       fontSize: 28,
                       fontWeight: FontWeight.bold)),
               const SizedBox(height: 40),
-
               if (_pinEnabled) ...[
                 Text(
                   _wrongPin ? '❌ PIN වැරදියි!' : 'PIN ඇතුල් කරන්න',
@@ -190,7 +188,8 @@ class _LockScreenState extends State<LockScreen> {
                             if (d == '⌫') {
                               setState(() {
                                 if (_pin.isNotEmpty) {
-                                  _pin = _pin.substring(0, _pin.length - 1);
+                                  _pin = _pin.substring(
+                                      0, _pin.length - 1);
                                 }
                               });
                             } else if (d.isNotEmpty) {
@@ -208,7 +207,8 @@ class _LockScreenState extends State<LockScreen> {
                             child: Center(
                               child: Text(d,
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 24)),
+                                      color: Colors.white,
+                                      fontSize: 24)),
                             ),
                           ),
                         );
@@ -220,14 +220,11 @@ class _LockScreenState extends State<LockScreen> {
                     style: TextStyle(color: Colors.white54)),
                 const SizedBox(height: 20),
               ],
-
-              // Skip button
               TextButton(
                 onPressed: _goToHome,
                 child: const Text('Skip → Enter වෙන්න',
                     style: TextStyle(color: Colors.grey)),
               ),
-
               if (_fingerprintEnabled)
                 TextButton.icon(
                   onPressed: _tryBiometric,
@@ -235,9 +232,7 @@ class _LockScreenState extends State<LockScreen> {
                   label: const Text('Fingerprint use කරන්න',
                       style: TextStyle(color: Colors.red)),
                 ),
-
               const SizedBox(height: 16),
-              // Settings button
               TextButton.icon(
                 onPressed: () async {
                   await Navigator.push(
@@ -341,7 +336,7 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
     }
   }
 
-  Widget _buildNumPad(Function(String) onTap) {
+  Widget _buildNumPad() {
     return Column(
       children: [
         ['1', '2', '3'],
@@ -357,14 +352,16 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                       if (d == '⌫') {
                         setState(() {
                           if (!_confirmStep && _newPin.isNotEmpty) {
-                            _newPin = _newPin.substring(0, _newPin.length - 1);
-                          } else if (_confirmStep && _confirmPin.isNotEmpty) {
+                            _newPin = _newPin.substring(
+                                0, _newPin.length - 1);
+                          } else if (_confirmStep &&
+                              _confirmPin.isNotEmpty) {
                             _confirmPin = _confirmPin.substring(
                                 0, _confirmPin.length - 1);
                           }
                         });
                       } else if (d.isNotEmpty) {
-                        onTap(d);
+                        _enterNewPin(d);
                       }
                     },
                     child: Container(
@@ -403,7 +400,6 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // PIN toggle
             Card(
               color: Colors.grey[900],
               child: SwitchListTile(
@@ -430,10 +426,7 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                 },
               ),
             ),
-
             const SizedBox(height: 12),
-
-            // Change PIN button
             if (_pinEnabled && !_settingPin)
               Card(
                 color: Colors.grey[900],
@@ -452,8 +445,6 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                   },
                 ),
               ),
-
-            // PIN setup pad
             if (_settingPin) ...[
               const SizedBox(height: 20),
               Center(
@@ -463,35 +454,33 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                       : (!_confirmStep
                           ? 'නව PIN enter කරන්න'
                           : 'PIN confirm කරන්න'),
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  style:
+                      const TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 16),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    4,
-                    (i) {
-                      final current =
-                          !_confirmStep ? _newPin : _confirmPin;
-                      return Container(
-                        margin: const EdgeInsets.all(8),
-                        width: 18,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: i < current.length
-                              ? Colors.red
-                              : Colors.grey[800],
-                        ),
-                      );
-                    },
-                  ),
+                  children: List.generate(4, (i) {
+                    final current =
+                        !_confirmStep ? _newPin : _confirmPin;
+                    return Container(
+                      margin: const EdgeInsets.all(8),
+                      width: 18,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: i < current.length
+                            ? Colors.red
+                            : Colors.grey[800],
+                      ),
+                    );
+                  }),
                 ),
               ),
               const SizedBox(height: 20),
-              _buildNumPad(_enterNewPin),
+              _buildNumPad(),
               Center(
                 child: TextButton(
                   onPressed: () => setState(() {
@@ -506,7 +495,6 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                 ),
               ),
             ],
-
             if (_message.isNotEmpty && !_settingPin) ...[
               const SizedBox(height: 12),
               Center(
@@ -517,10 +505,7 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                             : Colors.red)),
               ),
             ],
-
             const SizedBox(height: 12),
-
-            // Fingerprint toggle
             Card(
               color: Colors.grey[900],
               child: SwitchListTile(
@@ -533,23 +518,27 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
                 onChanged: (val) async {
                   if (val) {
                     try {
-                      bool canCheck = await _auth.canCheckBiometrics;
+                      bool canCheck =
+                          await _auth.canCheckBiometrics;
                       if (canCheck) {
                         bool result = await _auth.authenticate(
-                          localizedReason: 'Fingerprint enable කරන්න',
+                          localizedReason:
+                              'Fingerprint enable කරන්න',
                           options: const AuthenticationOptions(
                               biometricOnly: false),
                         );
                         if (result) {
-                          setState(() => _fingerprintEnabled = true);
+                          setState(
+                              () => _fingerprintEnabled = true);
                           _save();
                         }
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Biometrics available නෑ')),
-                        );
+                        if (mounted) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  content: Text(
+                                      'Biometrics available නෑ')));
+                        }
                       }
                     } catch (_) {}
                   } else {
@@ -566,7 +555,7 @@ class _LockSettingsScreenState extends State<LockSettingsScreen> {
   }
 }
 
-// ==================== MAIN YOUTUBE SCREEN ====================
+// ==================== YOUTUBE SCREEN ====================
 class YouTubeScreen extends StatefulWidget {
   const YouTubeScreen({super.key});
 
@@ -578,7 +567,6 @@ class _YouTubeScreenState extends State<YouTubeScreen> {
   late final WebViewController _controller;
   bool _isLoading = true;
   bool _hasInternet = true;
-  bool _isPiP = false;
 
   @override
   void initState() {
@@ -666,29 +654,6 @@ class _YouTubeScreenState extends State<YouTubeScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (_isPiP) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            SizedBox(
-                width: 300,
-                height: 180,
-                child: WebViewWidget(controller: _controller)),
-            Positioned(
-              top: 4,
-              right: 4,
-              child: GestureDetector(
-                onTap: () => setState(() => _isPiP = false),
-                child: const Icon(Icons.fullscreen,
-                    color: Colors.white, size: 30),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -699,15 +664,24 @@ class _YouTubeScreenState extends State<YouTubeScreen> {
               style: TextStyle(
                   color: Colors.white, fontWeight: FontWeight.bold)),
           actions: [
+            // 🌙 Dark/Light toggle
             IconButton(
-              icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode,
-                  color: Colors.white),
+              icon: Icon(
+                isDark ? Icons.light_mode : Icons.dark_mode,
+                color: Colors.white,
+              ),
               onPressed: () => MyApp.of(context)?.toggleTheme(),
             ),
+            // ⚙️ Settings
             IconButton(
-              icon: const Icon(Icons.picture_in_picture,
-                  color: Colors.white),
-              onPressed: () => setState(() => _isPiP = true),
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const LockSettingsScreen()),
+                );
+              },
             ),
           ],
         ),
@@ -756,7 +730,8 @@ class _YouTubeScreenState extends State<YouTubeScreen> {
             },
             icon: const Icon(Icons.refresh),
             label: const Text('Retry'),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style:
+                ElevatedButton.styleFrom(backgroundColor: Colors.red),
           ),
         ],
       ),
